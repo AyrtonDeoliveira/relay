@@ -22,6 +22,8 @@
       --surface: #1e2025;
       --surface-2: #1a1c21;
       --border: #23252b;
+      --border-strong: #2a2d33;
+      --ring-read: #3a3d44;
       --text: #f2f2f0;
       --muted: #a3a6ad;
       --accent: #e11d63;
@@ -53,11 +55,11 @@
 
     /* Portada */
     .hero {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 48px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      padding-block: 48px 72px;
+      text-align: center;
+      padding-block: 40px 48px;
     }
     .pill {
       display: inline-flex; align-items: center; gap: 8px;
@@ -67,9 +69,9 @@
     }
     h1 { font-size: clamp(36px, 5.4vw, 58px); line-height: 1.05; margin: 18px 0 16px; letter-spacing: -0.03em; font-weight: 800; }
     h1 em { font-style: normal; background: linear-gradient(180deg, var(--accent-top), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .lead { color: var(--muted); font-size: 18px; margin: 0 0 28px; max-width: 470px; }
+    .lead { color: var(--muted); font-size: 18px; margin: 0 auto 28px; max-width: 520px; }
 
-    .download { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+    .download { display: flex; flex-direction: column; align-items: center; gap: 12px; }
     .btn {
       display: inline-flex; align-items: center; gap: 12px;
       padding: 16px 26px; border-radius: 14px; border: 0;
@@ -81,7 +83,7 @@
     .btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -12px color-mix(in srgb, var(--accent) 80%, transparent); }
     .btn[aria-disabled="true"] { background: var(--surface); color: var(--muted); box-shadow: none; pointer-events: none; }
     .btn svg { width: 22px; height: 22px; flex: none; }
-    .meta { color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+    .meta { color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 14px; }
     .status { display: inline-flex; align-items: center; gap: 7px; }
     .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
     .status.on .dot { background: var(--online); box-shadow: 0 0 0 4px color-mix(in srgb, var(--online) 20%, transparent); }
@@ -89,40 +91,108 @@
     .note { font-size: 14px; color: var(--muted); max-width: 440px; margin: 0; }
     .note.warn { color: #fbbf24; }
 
-    /* La ventanita de ejemplo */
-    .mock {
+    /* La ventana de ejemplo: el diseño de Relay de verdad (barra, historias, sala de llamada y panel) */
+    .shot { padding-bottom: 72px; }
+    .app {
+      --tile: #17181c;
+      --speaking: #3b82f6;
+      --leave: #f87171;
       border-radius: 18px; overflow: hidden;
-      background: var(--panel); border: 1px solid var(--border);
-      box-shadow: 0 40px 80px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.02);
-      display: grid; grid-template-columns: 58px 150px 1fr; height: 400px;
-      font-size: 13px;
+      background: var(--bg); border: 1px solid var(--border-strong);
+      box-shadow: 0 40px 90px -30px rgba(0,0,0,.85), 0 0 120px -40px color-mix(in srgb, var(--accent) 35%, transparent);
+      font-size: 12.5px; text-align: left; user-select: none;
     }
-    .mock-servers { background: var(--bg); padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-    .mock-servers span { width: 38px; height: 38px; border-radius: 12px; background: var(--surface); display: grid; place-items: center; font-weight: 800; font-size: 14px; color: var(--muted); }
-    .mock-servers span.on { background: var(--accent); color: #fff; }
-    .mock-servers hr { width: 24px; border: 0; border-top: 2px solid var(--border); margin: 2px 0; }
-    .mock-channels { background: var(--surface-2); padding: 14px 10px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-    .mock-channels b { font-size: 14px; margin: 0 6px 10px; }
-    .mock-channels small { color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .06em; margin: 10px 6px 4px; }
-    .mock-channels div { padding: 5px 8px; border-radius: 8px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mock-channels div.on { background: var(--surface); color: var(--text); }
-    .mock-voice { display: flex; align-items: center; gap: 6px; padding-left: 20px !important; }
-    .mock-voice i { width: 16px; height: 16px; border-radius: 50%; flex: none; }
-    .mock-chat { display: flex; flex-direction: column; min-width: 0; }
-    .mock-top { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 700; }
-    .mock-msgs { flex: 1; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; justify-content: flex-end; overflow: hidden; }
-    .msg { display: flex; gap: 10px; align-items: flex-end; }
-    .msg .av { width: 30px; height: 30px; border-radius: 50%; flex: none; display: grid; place-items: center; font-weight: 800; font-size: 12px; color: #fff; }
-    .msg .bubble { background: var(--surface); padding: 8px 12px; border-radius: 14px 14px 14px 4px; max-width: 80%; }
-    .msg .bubble small { display: block; color: var(--muted); font-size: 11px; font-weight: 700; }
-    .msg.own { flex-direction: row-reverse; }
-    .msg.own .bubble { background: var(--accent); border-radius: 14px 14px 4px 14px; }
-    .poll { background: var(--surface); border-radius: 14px; padding: 10px 12px; max-width: 80%; display: grid; gap: 6px; }
-    .poll b { font-size: 13px; }
-    .poll .opt { position: relative; border-radius: 8px; background: var(--surface-2); padding: 5px 9px; overflow: hidden; font-size: 12px; display: flex; justify-content: space-between; }
-    .poll .opt::before { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: color-mix(in srgb, var(--accent) 35%, transparent); }
-    .poll .opt span { position: relative; }
-    .mock-input { margin: 0 16px 14px; padding: 10px 14px; border-radius: 12px; background: var(--surface); color: var(--muted); }
+    .app svg { width: 16px; height: 16px; flex: none; }
+    .av { border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; flex: none; }
+    .r-top { display: flex; align-items: center; gap: 14px; height: 50px; padding: 0 16px 0 20px; border-bottom: 1px solid var(--border); }
+    .r-word { font-weight: 800; font-size: 20px; letter-spacing: -0.03em; margin-right: auto; }
+    .r-callpill { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 22%, var(--bg)); white-space: nowrap; }
+    .r-callpill b { font-weight: 700; }
+    .r-callpill span { color: var(--muted); }
+    .r-callpill svg { width: 14px; height: 14px; }
+    .r-livedot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+    .r-top > svg { color: var(--muted); }
+
+    .r-strip { display: flex; gap: 14px; padding: 12px 18px 10px; border-bottom: 1px solid var(--border); }
+    .r-story { display: flex; flex-direction: column; align-items: center; gap: 7px; width: 62px; }
+    .r-ring { position: relative; width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--ring-read); display: grid; place-items: center; }
+    .r-ring.dashed { border-style: dashed; border-width: 2px; color: var(--muted); }
+    .r-ring.live { border-color: var(--accent); }
+    .r-ring .av { width: 38px; height: 38px; font-size: 13px; }
+    .r-badge { position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); padding: 0 5px; border-radius: 5px; border: 2px solid var(--bg); background: var(--accent); font-size: 7.5px; font-weight: 800; white-space: nowrap; }
+    .r-story small { font-size: 11px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .r-story.on small { color: var(--text); font-weight: 700; position: relative; }
+    .r-story.on small::after { content: ""; position: absolute; left: 30%; right: 30%; bottom: -5px; height: 2px; border-radius: 2px; background: var(--accent); }
+
+    .r-body { display: grid; grid-template-columns: 180px minmax(0, 1fr) 210px; height: 520px; }
+    .r-side { border-right: 1px solid var(--border); padding: 16px 10px; display: flex; flex-direction: column; gap: 4px; }
+    .r-server { display: flex; align-items: center; gap: 8px; padding: 0 4px 10px; font-weight: 800; font-size: 15px; line-height: 1.1; }
+    .r-server .av { width: 30px; height: 30px; font-size: 11px; }
+    .r-server svg { color: var(--muted); width: 14px; height: 14px; }
+    .r-server svg:first-of-type { margin-left: auto; }
+    .r-chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-weight: 700; font-size: 11.5px; margin: 0 4px 4px; }
+    .r-chip svg { width: 12px; height: 12px; }
+    .r-label { display: flex; justify-content: space-between; color: var(--muted); font-size: 11.5px; font-weight: 600; padding: 12px 6px 6px; }
+    .r-chan { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 10px; color: var(--muted); font-weight: 600; font-size: 13.5px; }
+    .r-chan b { color: var(--text); font-weight: 700; }
+    .r-chan.on { background: color-mix(in srgb, var(--accent) 22%, var(--bg)); color: var(--text); }
+    .r-chan .n { margin-left: auto; font-size: 11px; color: var(--muted); }
+    .r-chan .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-left: auto; }
+    .r-hash { font-size: 16px; font-weight: 500; width: 16px; text-align: center; }
+
+    .r-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .r-head { display: flex; align-items: center; gap: 10px; padding: 10px 16px; }
+    .r-head b { font-size: 15px; display: block; line-height: 1.2; }
+    .r-head small { color: var(--muted); display: flex; align-items: center; gap: 5px; }
+    .r-head .tools { margin-left: auto; display: flex; gap: 14px; color: var(--muted); }
+    .r-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 4px 16px 0; }
+    .r-tile { position: relative; height: 96px; border-radius: 12px; background: var(--tile); display: grid; place-items: center; border: 2px solid transparent; }
+    .r-tile.speaking { border-color: var(--speaking); }
+    .r-tile .av { width: 44px; height: 44px; font-size: 16px; }
+    .r-tile span:not(.av) { position: absolute; left: 8px; bottom: 7px; padding: 2px 7px; border-radius: 999px; background: rgba(15,16,19,.8); font-weight: 700; font-size: 11px; }
+    .r-controls { display: flex; justify-content: center; gap: 8px; padding: 12px 0 14px; border-bottom: 1px solid var(--border); }
+    .r-controls i { width: 34px; height: 34px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; }
+    .r-controls .leave { width: auto; padding: 0 14px; gap: 6px; display: flex; align-items: center; border-radius: 999px; background: var(--leave); color: #fff; font-style: normal; font-weight: 700; }
+    .r-msgs { flex: 1; min-height: 0; padding: 12px 16px 6px; display: flex; flex-direction: column; justify-content: flex-end; gap: 5px; overflow: hidden; }
+    .r-who { margin-left: 38px; color: var(--muted); font-size: 11px; }
+    .r-who b { color: var(--text); font-weight: 700; margin-right: 4px; }
+    .r-group { display: flex; gap: 8px; align-items: flex-end; }
+    .r-group .av { width: 30px; height: 30px; font-size: 11px; }
+    .r-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+    .r-bubble { padding: 6px 11px; border-radius: 16px 16px 16px 6px; background: var(--surface); border: 1px solid var(--border-strong); font-size: 13px; }
+    .r-reply { align-self: flex-end; display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 11px; margin-top: 6px; }
+    .r-reply b { color: var(--text); }
+    .r-reply .av { width: 14px; height: 14px; font-size: 7px; }
+    .r-bubble.own { align-self: flex-end; background: var(--accent); border-color: transparent; border-radius: 16px 16px 6px 16px; color: #fff; }
+    .r-poll { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 16px 16px 16px 6px; padding: 9px 11px; width: 240px; display: grid; gap: 5px; }
+    .r-poll b { font-size: 12.5px; }
+    .r-opt { position: relative; border-radius: 8px; background: var(--surface-2); padding: 4px 9px; overflow: hidden; font-size: 11.5px; display: flex; justify-content: space-between; }
+    .r-opt::before { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: color-mix(in srgb, var(--accent) 35%, transparent); }
+    .r-opt span { position: relative; }
+    .r-composer { margin: 6px 16px 14px; display: flex; align-items: center; gap: 10px; padding: 5px 5px 5px 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border-strong); color: var(--muted); }
+    .r-composer span { flex: 1; }
+    .r-composer em { font-style: normal; font-weight: 700; padding: 6px 14px; border-radius: 999px; background: var(--surface); }
+
+    .r-call { border-left: 1px solid var(--border); padding: 14px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+    .r-call-top { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 14px; }
+    .r-call-top small { margin-left: auto; color: var(--muted); font-weight: 600; font-size: 11px; }
+    .r-call-sub { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; margin-top: -4px; }
+    .r-call-sub em { font-style: normal; color: var(--accent); font-weight: 700; }
+    .r-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .r-mini div { height: 66px; border-radius: 10px; background: var(--tile); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-weight: 700; font-size: 11px; border: 2px solid transparent; }
+    .r-mini div.speaking { border-color: var(--speaking); }
+    .r-mini .av { width: 28px; height: 28px; font-size: 10px; }
+    .r-call-actions { display: flex; gap: 6px; align-items: center; }
+    .r-call-actions i { width: 30px; height: 30px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; }
+    .r-call-actions i svg { width: 14px; height: 14px; }
+    .r-call-actions em { flex: 1; text-align: center; font-style: normal; font-weight: 700; font-size: 11.5px; padding: 7px 0; border-radius: 999px; background: var(--text); color: var(--bg); }
+    .r-role { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; margin-top: 6px; }
+    .r-role::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--role, var(--muted)); }
+    .r-member { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 12px; }
+    .r-member .av { width: 26px; height: 26px; font-size: 10px; position: relative; }
+    .r-member .av::after { content: ""; position: absolute; right: -2px; bottom: -2px; width: 8px; height: 8px; border-radius: 50%; background: var(--online); border: 2px solid var(--bg); }
+    .r-member small { display: block; color: var(--muted); font-weight: 500; font-size: 10.5px; }
+    .r-fx { background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
 
     /* Qué tiene */
     section h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -0.02em; margin: 0 0 8px; font-weight: 800; }
@@ -150,16 +220,25 @@
     footer { border-top: 1px solid var(--border); padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
     footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; justify-content: space-between; }
 
+    @media (max-width: 960px) {
+      .r-body { grid-template-columns: 170px minmax(0, 1fr); }
+      .r-call { display: none; }
+    }
     @media (max-width: 880px) {
-      .hero { grid-template-columns: 1fr; padding-block-start: 24px; gap: 40px; }
       .grid, .steps { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 700px) {
+      .r-body { grid-template-columns: minmax(0, 1fr); height: 540px; }
+      .r-side, .r-callpill span, .r-head .tools, .r-story.extra { display: none; }
+      .r-tiles { grid-template-columns: 1fr 1fr; }
+      .r-tile { height: 70px; }
+      .r-tile .av { width: 34px; height: 34px; font-size: 13px; }
+      .r-poll { width: 200px; }
     }
     @media (max-width: 600px) {
       .wrap { padding: 0 16px; }
       header nav { display: none; }
       .grid, .steps { grid-template-columns: 1fr; }
-      .mock { grid-template-columns: 48px 1fr; height: 360px; }
-      .mock-channels { display: none; }
       .btn { width: 100%; justify-content: center; }
       .download { align-items: stretch; }
     }
@@ -200,40 +279,110 @@
         </div>
       </div>
 
-      <div class="mock" aria-hidden="true">
-        <div class="mock-servers">
-          <span class="on">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6l6 6-6 6M13 6l6 6-6 6"/></svg>
-          </span>
-          <hr />
-          <span style="background:#3b82f6;color:#fff">LP</span>
-          <span style="background:#22c55e;color:#fff">5B</span>
-          <span>+</span>
+    </div>
+
+    <div class="wrap shot">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+          <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+          <symbol id="i-head" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="2"/><rect x="17" y="14" width="4" height="6" rx="2"/></symbol>
+          <symbol id="i-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="12" height="10" rx="2"/><path d="M15 11l6-3v8l-6-3M3 3l18 18"/></symbol>
+          <symbol id="i-screen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M12 13V7M9 10l3-3 3 3"/></symbol>
+          <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+          <symbol id="i-hang" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14.5c5-5 13-5 18 0l-2.5 2.5-3-1.5v-2.5a10 10 0 0 0-7 0v2.5l-3 1.5z"/></symbol>
+          <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+          <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+          <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+          <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+          <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+          <symbol id="i-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+          <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+          <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5M9 3h6l-1 6 3 4H7l3-4z"/></symbol>
+          <symbol id="i-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l9-9a3.7 3.7 0 0 1 5.2 5.2l-9 9a1.8 1.8 0 0 1-2.6-2.6L15.5 6"/></symbol>
+          <symbol id="i-reply" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-5a4 4 0 0 1 4-4h12"/></symbol>
+        </defs>
+      </svg>
+
+      <div class="app" aria-hidden="true">
+        <div class="r-top">
+          <span class="r-word">relay</span>
+          <span class="r-callpill"><i class="r-livedot"></i><b>En llamada · Charla</b><span>· Los pibes</span><svg><use href="#i-mic"/></svg><svg><use href="#i-hang"/></svg></span>
+          <svg><use href="#i-gear"/></svg>
+          <span class="av" style="width:30px;height:30px;font-size:11px;background:#e11d63">A</span>
         </div>
-        <div class="mock-channels">
-          <b>Los pibes</b>
-          <small>TEXTO</small>
-          <div class="on"># general</div>
-          <div># memes</div>
-          <div># tarea</div>
-          <small>VOZ</small>
-          <div>🔊 Charla</div>
-          <div class="mock-voice"><i style="background:#8b5cf6"></i>Beto</div>
-          <div class="mock-voice"><i style="background:#f59e0b"></i>Caro</div>
+
+        <div class="r-strip">
+          <div class="r-story"><span class="r-ring"><svg><use href="#i-chat"/></svg></span><small>Chats</small></div>
+          <div class="r-story"><span class="r-ring dashed"><svg><use href="#i-plus"/></svg></span><small>Nuevo</small></div>
+          <div class="r-story on"><span class="r-ring live"><span class="av" style="background:linear-gradient(135deg,#8b5cf6,#e11d63)">LP</span><span class="r-badge">EN LLAMADA</span></span><small>Los pibes</small></div>
+          <div class="r-story extra"><span class="r-ring"><span class="av" style="background:#22c55e">5B</span></span><small>5to B</small></div>
+          <div class="r-story extra"><span class="r-ring"><span class="av" style="background:#0ea5e9">MC</span></span><small>Minecraft</small></div>
         </div>
-        <div class="mock-chat">
-          <div class="mock-top"># general</div>
-          <div class="mock-msgs">
-            <div class="msg"><span class="av" style="background:#8b5cf6">B</span><div class="bubble"><small>Beto</small>¿Quién se suma a jugar a la noche?</div></div>
-            <div class="msg"><span class="av" style="background:#f59e0b">C</span><div class="poll">
-              <b>📊 ¿A qué jugamos?</b>
-              <div class="opt" style="--w:62%"><span>Minecraft</span><span>5</span></div>
-              <div class="opt" style="--w:25%"><span>Among Us</span><span>2</span></div>
-              <div class="opt" style="--w:13%"><span>Fortnite</span><span>1</span></div>
-            </div></div>
-            <div class="msg own"><span class="av" style="background:#e11d63">A</span><div class="bubble">Yo! Entro a Charla en 5 😎</div></div>
+
+        <div class="r-body">
+          <aside class="r-side">
+            <div class="r-server"><span class="av" style="background:linear-gradient(135deg,#8b5cf6,#e11d63)">LP</span>Los pibes<svg><use href="#i-bell"/></svg><svg><use href="#i-gear"/></svg></div>
+            <span class="r-chip"><svg><use href="#i-link"/></svg>Invitar</span>
+            <span class="r-chip"><svg><use href="#i-cal"/></svg>Eventos <span style="color:var(--muted)">1</span></span>
+            <div class="r-label"><span>Canales</span><span>+</span></div>
+            <div class="r-chan"><span class="r-hash">#</span><b>general</b><span class="dot"></span></div>
+            <div class="r-chan"><span class="r-hash">#</span>memes</div>
+            <div class="r-chan on"><svg><use href="#i-vol"/></svg><b>Charla</b><span class="n">4</span></div>
+            <div class="r-chan"><svg><use href="#i-vol"/></svg>Juegos</div>
+          </aside>
+
+          <div class="r-main">
+            <div class="r-head">
+              <svg style="color:var(--muted)"><use href="#i-vol"/></svg>
+              <div><b>Charla</b><small><i class="r-livedot"></i>En llamada · 12:34</small></div>
+              <div class="tools"><svg><use href="#i-search"/></svg><svg><use href="#i-pin"/></svg><svg><use href="#i-chat"/></svg></div>
+            </div>
+            <div class="r-tiles">
+              <div class="r-tile"><span class="av" style="background:#e11d63">A</span><span>Vos</span></div>
+              <div class="r-tile speaking"><span class="av" style="background:#8b5cf6">B</span><span>Beto</span></div>
+              <div class="r-tile"><span class="av" style="background:#f59e0b">C</span><span>Caro</span></div>
+              <div class="r-tile"><span class="av" style="background:#14b8a6">D</span><span>Dami</span></div>
+            </div>
+            <div class="r-controls">
+              <i><svg><use href="#i-mic"/></svg></i><i><svg><use href="#i-head"/></svg></i><i><svg><use href="#i-cam"/></svg></i><i><svg><use href="#i-screen"/></svg></i><i><svg><use href="#i-gear"/></svg></i>
+              <em class="leave"><svg><use href="#i-hang"/></svg>Salir</em>
+            </div>
+            <div class="r-msgs">
+              <div class="r-who"><b>Beto</b>21:23</div>
+              <div class="r-group">
+                <span class="av" style="background:#8b5cf6">B</span>
+                <div class="r-stack">
+                  <div class="r-bubble">¿Quién se suma a jugar a la noche?</div>
+                  <div class="r-poll">
+                    <b>📊 ¿A qué jugamos?</b>
+                    <div class="r-opt" style="--w:62%"><span>Minecraft</span><span>5</span></div>
+                    <div class="r-opt" style="--w:25%"><span>Among Us</span><span>2</span></div>
+                    <div class="r-opt" style="--w:13%"><span>Fortnite</span><span>1</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="r-reply"><svg style="width:12px;height:12px"><use href="#i-reply"/></svg><span class="av" style="background:#8b5cf6">B</span><b>Beto</b>¿Quién se suma a jugar a la noche?</div>
+              <div class="r-bubble own">Yo! Entro en 5 😎</div>
+            </div>
+            <div class="r-composer"><svg><use href="#i-clip"/></svg><span>Mensaje para la sala Charla</span><em>Enviar</em></div>
           </div>
-          <div class="mock-input">Escribile a #general</div>
+
+          <aside class="r-call">
+            <div class="r-call-top"><i class="r-livedot"></i>En llamada<small>12:34</small></div>
+            <div class="r-call-sub"><span>Charla · 4 personas</span><em>Ver sala</em></div>
+            <div class="r-mini">
+              <div><span class="av" style="background:#e11d63">A</span>vos</div>
+              <div class="speaking"><span class="av" style="background:#8b5cf6">B</span>Beto</div>
+              <div><span class="av" style="background:#f59e0b">C</span>Caro</div>
+              <div><span class="av" style="background:#14b8a6">D</span>Dami</div>
+            </div>
+            <div class="r-call-actions"><i><svg><use href="#i-mic"/></svg></i><i><svg><use href="#i-head"/></svg></i><em>Salir de la sala</em></div>
+            <div class="r-role" style="--role:#3b82f6">OWNERS — 1</div>
+            <div class="r-member"><span class="av" style="background:#e11d63">A</span><div><span class="r-fx">Ana</span><small>tomando café ☕</small></div></div>
+            <div class="r-role" style="--role:#f59e0b">AMIGOS — 3</div>
+            <div class="r-member"><span class="av" style="background:#8b5cf6">B</span><div>Beto<small>jugando Minecraft</small></div></div>
+            <div class="r-member"><span class="av" style="background:#f59e0b">C</span><div>Caro</div></div>
+          </aside>
         </div>
       </div>
     </div>

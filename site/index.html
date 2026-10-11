@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#050611" name="theme-color"/>
+<link rel="icon" type="image/png" href="icon.png"/>
+<link rel="apple-touch-icon" href="icon.png"/>
+<title>Relay — Tu gente. Tu espacio.</title>
+<style>
+:root {
+  --bg: #050611;
+  --bg-translucent: rgba(5, 6, 17, 0.78);
+  --cyan: #20e7f6;
+  --blue: #497dff;
+  --violet: #8552ff;
+  --pink: #e244f6;
+  --text: #f7f8ff;
+  --muted: #aeb6d6;
+  --border: rgba(150, 166, 255, 0.17);
+  --border-strong: rgba(160, 180, 255, 0.28);
+  --surface-card: linear-gradient(145deg, rgba(20, 26, 59, 0.85), rgba(9, 11, 29, 0.92));
+  --surface-alt: linear-gradient(180deg, rgba(16, 19, 43, 0.52), rgba(8, 10, 24, 0.18));
+  --card-bg-blur: rgba(11, 14, 34, 0.85);
+  --btn-bg: rgba(18, 23, 54, 0.8);
+  --btn-border: rgba(169, 185, 255, 0.22);
+  --btn-text: #ffffff;
+  --header-bg: rgba(5, 6, 17, 0.78);
+  --glow: rgba(32, 231, 246, 0.18);
+  --detail-item-title: #ffffff;
+  --detail-item-text: #e0e7ff;
+  --detail-item-num: #a9baff;
+}
+
+/* Modo Claro Limpio y Luminoso sin filtros de inversión */
+html.light-theme {
+  --bg: #f5f7fd;
+  --bg-translucent: rgba(245, 247, 253, 0.88);
+  --text: #0e122b;
+  --muted: #5b6589;
+  --border: rgba(100, 115, 180, 0.18);
+  --border-strong: rgba(85, 105, 190, 0.28);
+  --surface-card: rgba(255, 255, 255, 0.88);
+  --surface-alt: rgba(240, 243, 255, 0.65);
+  --card-bg-blur: rgba(255, 255, 255, 0.92);
+  --btn-bg: rgba(235, 240, 255, 0.9);
+  --btn-border: rgba(100, 120, 200, 0.25);
+  --btn-text: #0e122b;
+  --header-bg: rgba(245, 247, 253, 0.85);
+  --glow: rgba(6, 182, 212, 0.15);
+  --detail-item-title: #0f172a;
+  --detail-item-text: #334155;
+  --detail-item-num: #0284c7;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 85px;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+::selection {
+  background: #754aff;
+  color: white;
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 10% 15%, #0753a51e, transparent 35%),
+    radial-gradient(ellipse at 90% 45%, #921eff20, transparent 38%),
+    var(--bg);
+  transition: background 0.3s ease;
+}
+
+html.light-theme .background {
+  background:
+    radial-gradient(ellipse at 15% 15%, rgba(6, 182, 212, 0.08), transparent 45%),
+    radial-gradient(ellipse at 85% 45%, rgba(124, 58, 237, 0.08), transparent 45%),
+    var(--bg);
+}
+
+/* Three.js: Lumi y las ondas - SIN INVERSIÓN CSS */
+#world {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+#world.lumi-flying {
+  z-index: 5;
+}
+
+header, main, footer {
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  width: min(1160px, calc(100% - 44px));
+  margin: 0 auto;
+}
+
+/* Navegación */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 76px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 22px;
+  font-weight: 850;
+  letter-spacing: -.06em;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.links {
+  display: flex;
+  gap: clamp(12px, 2vw, 28px);
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.links a {
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+.links a:hover { color: var(--text); }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--btn-bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.theme-toggle-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--cyan);
+}
+.theme-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 18px;
+  border: 1px solid var(--btn-border);
+  border-radius: 12px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform .2s, border-color .2s, filter .2s;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  border-color: #48ddff9c;
+}
+
+.button.primary {
+  color: #050611;
+  border: 0;
+  background: linear-gradient(105deg, #24e7f4, #6582ff 56%, #cf4dff);
+  box-shadow: 0 10px 35px rgba(73, 96, 255, 0.25);
+}
+
+.button.primary:hover { filter: brightness(1.1); }
+
+/* Portada */
+
+.hero {
+  min-height: calc(100svh - 76px);
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: min(80vw, 900px);
+  aspect-ratio: 1;
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(
+    circle,
+    rgba(51, 75, 255, 0.1),
+    rgba(89, 31, 220, 0.05) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr .85fr;
+  align-items: center;
+  gap: 25px;
+  padding-top: 34px;
+  padding-bottom: 55px;
+}
+
+.hero-copy {
+  max-width: 670px;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  background: var(--card-bg-blur);
+  color: var(--text);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #39f2d0;
+  box-shadow: 0 0 12px #39f2d0;
+}
+
+h1 {
+  margin: 26px 0 20px;
+  font-size: clamp(55px, 7.5vw, 94px);
+  line-height: .98;
+  letter-spacing: -.075em;
+  font-weight: 850;
+}
+
+.gradient {
+  color: transparent;
+  background: linear-gradient(
+    100deg, #eafcff, #45e9f7 28%,
+    #6582ff 62%, #df66ff
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+html.light-theme .gradient {
+  background: linear-gradient(
+    100deg, #0284c7, #2563eb 45%, #7c3aed 80%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.lead {
+  max-width: 530px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(16px, 1.7vw, 19px);
+  line-height: 1.8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.download-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 26px;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: rgba(14, 19, 44, 0.72);
+  border: 1px solid rgba(140, 165, 255, 0.22);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.65), 0 0 25px rgba(36, 231, 244, 0.08);
+  max-width: 480px;
+}
+
+.download-area .button {
+  padding: 14px 20px;
+}
+
+.download-area svg {
+  width: 21px;
+  height: 21px;
+  flex: none;
+}
+
+.download-area .button[aria-disabled="true"] {
+  background: #1b2342;
+  color: #9aa6c8;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.download-area .meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.download-area .status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.download-area .status .dot {
+  background: #8994b2;
+  box-shadow: none;
+}
+
+.download-area .status.on .dot {
+  background: #39f2d0;
+  box-shadow: 0 0 9px rgba(57, 242, 208, 0.4);
+}
+
+.download-area .status.off .dot {
+  background: #f87171;
+}
+
+.download-area .note {
+  margin: 0;
+  font-size: 12px;
+}
+
+.download-area .note.warn {
+  color: #fbbf24;
+}
+
+.note {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hero-stage {
+  min-height: 440px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.halo {
+  position: absolute;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle, rgba(41, 89, 255, 0.15), rgba(141, 39, 255, 0.08) 42%, transparent 68%
+  );
+  filter: blur(20px);
+}
+
+.mascot-card {
+  position: absolute;
+  right: 0;
+  bottom: 32px;
+  max-width: 360px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card-bg-blur);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 42px rgba(0, 0, 0, 0.2);
+  font-size: 12px;
+}
+
+.lumi-greeting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.lumi-greeting strong {
+  margin: 0;
+  font-size: 17px;
+}
+
+.lumi-greeting .button {
+  padding: 11px 13px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.mascot-card > span {
+  display: block;
+  margin-top: 9px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.mascot-card .note {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .17em;
+}
+
+/* Mockup exacto de la app de Relay (modo oscuro nativo y colores originales) */
+.relay-preview {
+  padding-bottom: 72px;
+  --bg: #0f1013;
+  --surface: #1e2025;
+  --surface-2: #1a1c21;
+  --border: #23252b;
+  --border-strong: #2a2d33;
+  --ring-read: #3a3d44;
+  --text: #f2f2f0;
+  --muted: #a3a6ad;
+  --accent: #e11d63;
+  --online: #22c55e;
+  --tile: #17181c;
+  --speaking: #3b82f6;
+  --leave: #f87171;
+}
+
+.relay-preview .app {
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.85), 0 0 120px -40px color-mix(in srgb, var(--accent) 35%, transparent);
+  font-size: 12.5px;
+  text-align: left;
+  user-select: none;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.relay-preview .app svg { width: 16px; height: 16px; flex: none; }
+.relay-preview .av { border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; flex: none; }
+.relay-preview .r-top { display: flex; align-items: center; gap: 14px; height: 50px; padding: 0 16px 0 20px; border-bottom: 1px solid var(--border); }
+.relay-preview .r-word { font-weight: 800; font-size: 20px; letter-spacing: -0.03em; margin-right: auto; }
+.relay-preview .r-callpill { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 22%, var(--bg)); white-space: nowrap; }
+.relay-preview .r-callpill b { font-weight: 700; }
+.relay-preview .r-callpill span { color: var(--muted); }
+.relay-preview .r-callpill svg { width: 14px; height: 14px; }
+.relay-preview .r-livedot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+.relay-preview .r-top > svg { color: var(--muted); }
+.relay-preview .r-strip { display: flex; gap: 14px; padding: 12px 18px 10px; border-bottom: 1px solid var(--border); }
+.relay-preview .r-story { display: flex; flex-direction: column; align-items: center; gap: 7px; width: 62px; }
+.relay-preview .r-ring { position: relative; width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--ring-read); display: grid; place-items: center; }
+.relay-preview .r-ring.dashed { border-style: dashed; border-width: 2px; color: var(--muted); }
+.relay-preview .r-ring.live { border-color: var(--accent); }
+.relay-preview .r-ring .av { width: 38px; height: 38px; font-size: 13px; }
+.relay-preview .r-badge { position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); padding: 0 5px; border-radius: 5px; border: 2px solid var(--bg); background: var(--accent); font-size: 7.5px; font-weight: 800; white-space: nowrap; }
+.relay-preview .r-story small { font-size: 11px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.relay-preview .r-story.on small { color: var(--text); font-weight: 700; position: relative; }
+.relay-preview .r-story.on small::after { content: ""; position: absolute; left: 30%; right: 30%; bottom: -5px; height: 2px; border-radius: 2px; background: var(--accent); }
+.relay-preview .r-body { display: grid; grid-template-columns: 180px minmax(0, 1fr) 210px; height: 520px; }
+.relay-preview .r-side { border-right: 1px solid var(--border); padding: 16px 10px; display: flex; flex-direction: column; gap: 4px; }
+.relay-preview .r-server { display: flex; align-items: center; gap: 8px; padding: 0 4px 10px; font-weight: 800; font-size: 15px; line-height: 1.1; }
+.relay-preview .r-server .av { width: 30px; height: 30px; font-size: 11px; }
+.relay-preview .r-server svg { color: var(--muted); width: 14px; height: 14px; }
+.relay-preview .r-server svg:first-of-type { margin-left: auto; }
+.relay-preview .r-chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-weight: 700; font-size: 11.5px; margin: 0 4px 4px; }
+.relay-preview .r-chip svg { width: 12px; height: 12px; }
+.relay-preview .r-label { display: flex; justify-content: space-between; color: var(--muted); font-size: 11.5px; font-weight: 600; padding: 12px 6px 6px; }
+.relay-preview .r-chan { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 10px; color: var(--muted); font-weight: 600; font-size: 13.5px; }
+.relay-preview .r-chan b { color: var(--text); font-weight: 700; }
+.relay-preview .r-chan.on { background: color-mix(in srgb, var(--accent) 22%, var(--bg)); color: var(--text); }
+.relay-preview .r-chan .n { margin-left: auto; font-size: 11px; color: var(--muted); }
+.relay-preview .r-chan .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-left: auto; }
+.relay-preview .r-hash { font-size: 16px; font-weight: 500; width: 16px; text-align: center; }
+.relay-preview .r-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.relay-preview .r-head { display: flex; align-items: center; gap: 10px; padding: 10px 16px; }
+.relay-preview .r-head b { font-size: 15px; display: block; line-height: 1.2; }
+.relay-preview .r-head small { color: var(--muted); display: flex; align-items: center; gap: 5px; }
+.relay-preview .r-head .tools { margin-left: auto; display: flex; gap: 14px; color: var(--muted); }
+.relay-preview .r-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 4px 16px 0; }
+.relay-preview .r-tile { position: relative; height: 96px; border-radius: 12px; background: var(--tile); display: grid; place-items: center; border: 2px solid transparent; }
+.relay-preview .r-tile.speaking { border-color: var(--speaking); }
+.relay-preview .r-tile .av { width: 44px; height: 44px; font-size: 16px; }
+.relay-preview .r-tile span:not(.av) { position: absolute; left: 8px; bottom: 7px; padding: 2px 7px; border-radius: 999px; background: rgba(15,16,19,.8); font-weight: 700; font-size: 11px; }
+.relay-preview .r-controls { display: flex; justify-content: center; gap: 8px; padding: 12px 0 14px; border-bottom: 1px solid var(--border); }
+.relay-preview .r-controls i { width: 34px; height: 34px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; }
+.relay-preview .r-controls .leave { width: auto; padding: 0 14px; gap: 6px; display: flex; align-items: center; border-radius: 999px; background: var(--leave); color: #fff; font-style: normal; font-weight: 700; }
+.relay-preview .r-msgs { flex: 1; min-height: 0; padding: 12px 16px 6px; display: flex; flex-direction: column; justify-content: flex-end; gap: 5px; overflow: hidden; }
+.relay-preview .r-who { margin-left: 38px; color: var(--muted); font-size: 11px; }
+.relay-preview .r-who b { color: var(--text); font-weight: 700; margin-right: 4px; }
+.relay-preview .r-group { display: flex; gap: 8px; align-items: flex-end; }
+.relay-preview .r-group .av { width: 30px; height: 30px; font-size: 11px; }
+.relay-preview .r-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.relay-preview .r-bubble { padding: 6px 11px; border-radius: 16px 16px 16px 6px; background: var(--surface); border: 1px solid var(--border-strong); font-size: 13px; }
+.relay-preview .r-reply { align-self: flex-end; display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 11px; margin-top: 6px; }
+.relay-preview .r-reply b { color: var(--text); }
+.relay-preview .r-reply .av { width: 14px; height: 14px; font-size: 7px; }
+.relay-preview .r-bubble.own { align-self: flex-end; background: var(--accent); border-color: transparent; border-radius: 16px 16px 6px 16px; color: #fff; }
+.relay-preview .r-poll { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 16px 16px 16px 6px; padding: 9px 11px; width: 240px; display: grid; gap: 5px; }
+.relay-preview .r-poll b { font-size: 12.5px; }
+.relay-preview .r-opt { position: relative; border-radius: 8px; background: var(--surface-2); padding: 4px 9px; overflow: hidden; font-size: 11.5px; display: flex; justify-content: space-between; }
+.relay-preview .r-opt::before { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: color-mix(in srgb, var(--accent) 35%, transparent); }
+.relay-preview .r-opt span { position: relative; }
+.relay-preview .r-composer { margin: 6px 16px 14px; display: flex; align-items: center; gap: 10px; padding: 5px 5px 5px 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border-strong); color: var(--muted); }
+.relay-preview .r-composer span { flex: 1; }
+.relay-preview .r-composer em { font-style: normal; font-weight: 700; padding: 6px 14px; border-radius: 999px; background: var(--surface); }
+.relay-preview .r-call { border-left: 1px solid var(--border); padding: 14px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.relay-preview .r-call-top { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 14px; }
+.relay-preview .r-call-top small { margin-left: auto; color: var(--muted); font-weight: 600; font-size: 11px; }
+.relay-preview .r-call-sub { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; margin-top: -4px; }
+.relay-preview .r-call-sub em { font-style: normal; color: var(--accent); font-weight: 700; }
+.relay-preview .r-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.relay-preview .r-mini div { height: 66px; border-radius: 10px; background: var(--tile); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-weight: 700; font-size: 11px; border: 2px solid transparent; }
+.relay-preview .r-mini div.speaking { border-color: var(--speaking); }
+.relay-preview .r-mini .av { width: 28px; height: 28px; font-size: 10px; }
+.relay-preview .r-call-actions { display: flex; gap: 6px; align-items: center; }
+.relay-preview .r-call-actions i { width: 30px; height: 30px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; }
+.relay-preview .r-call-actions i svg { width: 14px; height: 14px; }
+.relay-preview .r-call-actions em { flex: 1; text-align: center; font-style: normal; font-weight: 700; font-size: 11.5px; padding: 7px 0; border-radius: 999px; background: var(--text); color: var(--bg); }
+.relay-preview .r-role { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; margin-top: 6px; }
+.relay-preview .r-role::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--role, var(--muted)); }
+.relay-preview .r-member { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 12px; }
+.relay-preview .r-member .av { width: 26px; height: 26px; font-size: 10px; position: relative; }
+.relay-preview .r-member .av::after { content: ""; position: absolute; right: -2px; bottom: -2px; width: 8px; height: 8px; border-radius: 50%; background: var(--online); border: 2px solid var(--bg); }
+.relay-preview .r-member small { display: block; color: var(--muted); font-weight: 500; font-size: 10.5px; }
+.relay-preview .r-fx { background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
+
+@media(max-width:960px) {
+  .relay-preview .r-body { grid-template-columns: 170px minmax(0,1fr); }
+  .relay-preview .r-call { display: none; }
+}
+
+@media(max-width:700px) {
+  .relay-preview .r-body { grid-template-columns: minmax(0,1fr); height: 540px; }
+  .relay-preview .r-side, .relay-preview .r-callpill span, .relay-preview .r-head .tools, .relay-preview .r-story.extra { display: none; }
+  .relay-preview .r-tiles { grid-template-columns: 1fr 1fr; }
+  .relay-preview .r-tile { height: 70px; }
+  .relay-preview .r-tile .av { width: 34px; height: 34px; font-size: 13px; }
+  .relay-preview .r-poll { width: 200px; }
+  .relay-preview .r-top { padding: 0 10px; gap: 8px; }
+  .relay-preview .r-callpill { font-size: 10px; gap: 5px; }
+  .mascot-card { max-width: 340px; }
+}
+
+/* Secciones de funciones y pilares */
+.section {
+  padding: 110px 0;
+  scroll-margin-top: 85px;
+}
+
+.section-heading {
+  max-width: 710px;
+  margin-bottom: 40px;
+}
+
+.professional-heading {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.professional-heading p {
+  max-width: 670px;
+}
+
+.overline {
+  color: #80eaff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+html.light-theme .overline {
+  color: #0284c7;
+}
+
+h2 {
+  margin: 15px 0;
+  font-size: clamp(35px, 5vw, 59px);
+  line-height: 1.06;
+  letter-spacing: -.06em;
+}
+
+.section-heading > p {
+  max-width: 650px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.feature-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 46px;
+}
+
+.pillar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  padding: 25px;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface-card);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.pillar:hover {
+  transform: translateY(-3px);
+  border-color: rgba(75, 203, 255, 0.42);
+}
+
+.pillar-number {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .12em;
+}
+
+.pillar-icon {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 13px;
+  color: #a9eaff;
+  background: linear-gradient(135deg, rgba(32, 231, 246, 0.12), rgba(133, 82, 255, 0.17));
+  font-size: 23px;
+}
+
+html.light-theme .pillar-icon {
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.1);
+}
+
+.pillar h3 {
+  margin: 0 0 10px;
+  font-size: 19px;
+  letter-spacing: -.025em;
+  color: var(--text);
+}
+
+.pillar p {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.pillar-link {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+  color: #b4d9ff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+html.light-theme .pillar-link {
+  color: #0284c7;
+}
+
+.pillar-link b {
+  font-size: 16px;
+}
+
+/* Detalle de secciones completas con contraste óptimo */
+.detail-section {
+  position: relative;
+  padding: 100px 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg-translucent);
+  backdrop-filter: blur(14px);
+}
+
+.detail-section.alt {
+  background: var(--surface-alt);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, .78fr) minmax(0, 1.22fr);
+  gap: clamp(36px, 7vw, 100px);
+  align-items: start;
+}
+
+.detail-intro {
+  position: sticky;
+  top: 120px;
+}
+
+.detail-intro h2 {
+  margin: 16px 0 18px;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+
+.detail-intro p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+  max-width: 390px;
+}
+
+.detail-panel {
+  border-top: 1px solid var(--border);
+}
+
+.detail-item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 16px;
+  padding: 23px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item > span {
+  padding-top: 3px;
+  color: var(--detail-item-num);
+  font-size: 12px;
+  letter-spacing: .08em;
+  font-weight: 700;
+}
+
+.detail-item h3 {
+  margin: 0 0 7px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.015em;
+  color: var(--detail-item-title);
+}
+
+.detail-item p {
+  margin: 0;
+  color: var(--detail-item-text);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.spec-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 15px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+  background: var(--card-bg-blur);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.spec-dot {
+  width: 7px;
+  height: 7px;
+  margin-top: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: #5ee5ef;
+  box-shadow: 0 0 12px rgba(94, 229, 239, 0.4);
+}
+
+/* Manifiesto */
+.manifesto {
+  padding: 70px 0 110px;
+  scroll-margin-top: 85px;
+}
+
+.manifesto-panel {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(30px, 6vw, 72px);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  background: var(--surface-card);
+  backdrop-filter: blur(14px);
+}
+
+.manifesto-panel::before,
+.manifesto-panel::after {
+  content: "";
+  position: absolute;
+  width: 330px;
+  height: 330px;
+  border-radius: 50%;
+  filter: blur(35px);
+  opacity: .23;
+  pointer-events: none;
+}
+
+.manifesto-panel::before {
+  background: #087dff;
+  left: -180px;
+  top: -200px;
+}
+
+.manifesto-panel::after {
+  background: #bd24ff;
+  right: -180px;
+  bottom: -230px;
+}
+
+.manifesto-content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+}
+
+.manifesto blockquote {
+  margin: 22px 0;
+  font-size: clamp(33px, 5.4vw, 63px);
+  line-height: 1.08;
+  letter-spacing: -.06em;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.manifesto p {
+  max-width: 610px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.manifesto .button { margin-top: 12px; }
+
+/* Sección Comunidad */
+#comunidad {
+  padding: 75px 0 110px;
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 0 35px;
+  color: var(--muted);
+  font-size: 12px;
+  background: var(--bg);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-tag { color: var(--text); }
+
+@media (max-width: 900px) {
+  .links { display: none; }
+  .feature-pillars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-grid { grid-template-columns: 1fr; gap: 28px; }
+  .detail-intro { position: static; }
+  .detail-intro p { max-width: 680px; }
+  .detail-section { padding: 76px 0; }
+}
+
+@media (max-width: 820px) {
+  .hero { min-height: auto; }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    padding-top: 30px;
+    gap: 0;
+  }
+  .hero-stage {
+    min-height: 300px;
+    grid-row: 1;
+  }
+  .hero-copy { text-align: center; }
+  .lead { margin-inline: auto; }
+  .actions { justify-content: center; }
+  .download-area { align-items: center; }
+  .download-area .meta { justify-content: center; }
+  h1 { font-size: clamp(54px, 10vw, 82px); }
+  .scroll-hint { display: none; }
+}
+
+@media (max-width: 680px) {
+  .container { width: calc(100% - 34px); }
+  header { height: 66px; }
+  .brand { font-size: 20px; }
+  .feature-pillars { grid-template-columns: 1fr; margin-top: 30px; }
+  .pillar { min-height: 0; padding: 22px; }
+  .pillar-icon { margin-bottom: 17px; }
+  .detail-section { padding: 60px 0; }
+  .detail-item { grid-template-columns: 25px minmax(0, 1fr); gap: 10px; padding: 19px 0; }
+  .detail-item h3 { font-size: 16px; }
+  .detail-item p { font-size: 13.5px; }
+}
+
+@media (max-width: 540px) {
+  .hero-grid { padding-top: 15px; padding-bottom: 70px; }
+  .hero-stage { min-height: 260px; }
+  h1 { font-size: clamp(49px, 13.5vw, 68px); }
+  .kicker { font-size: 9px; }
+  .lead { font-size: 15px; }
+  .actions { flex-direction: column; }
+  .actions .button { width: 100%; }
+  .download-area .button { width: 100%; }
+  .mascot-card {
+    right: 0;
+    bottom: 0;
+    max-width: 280px;
+    padding: 11px;
+    font-size: 11px;
+  }
+  .section { padding: 75px 0; }
+  .section-heading { margin-bottom: 28px; }
+  .manifesto { padding: 20px 0 75px; }
+  .manifesto-panel { border-radius: 22px; }
+  .footer-inner { align-items: flex-start; flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}
+
+/* Modo claro pulido: paleta coherente, sin invertir ni teñir a Lumi */
+html.light-theme {
+ color-scheme:light; --bg:#f5f7fc; --bg-translucent:rgba(248,250,255,.9);
+ --text:#151a31; --muted:#596582; --border:rgba(74,91,151,.17); --border-strong:rgba(74,91,151,.27);
+ --surface-card:linear-gradient(145deg,rgba(255,255,255,.96),rgba(242,245,255,.94));
+ --surface-alt:linear-gradient(180deg,rgba(255,255,255,.92),rgba(239,243,253,.8));
+ --card-bg-blur:rgba(255,255,255,.9); --btn-bg:rgba(255,255,255,.92);
+ --btn-border:rgba(78,96,159,.22); --btn-text:#17203b; --header-bg:rgba(248,250,255,.88);
+ --detail-item-title:#17203b; --detail-item-text:#35415f; --detail-item-num:#3157bd;
+}
+html.light-theme .background {background:radial-gradient(ellipse at 12% 10%,rgba(33,150,243,.09),transparent 38%),radial-gradient(ellipse at 88% 38%,rgba(139,92,246,.08),transparent 40%),var(--bg)}
+html.light-theme .kicker,html.light-theme .mascot-card,html.light-theme .download-area {background:rgba(255,255,255,.84);border-color:rgba(74,91,151,.2);box-shadow:0 14px 40px rgba(41,56,105,.08)}
+html.light-theme .manifesto-panel {background:linear-gradient(120deg,#edf5ff,#f5edff);border-color:rgba(74,91,151,.18)}
+html.light-theme .manifesto p,html.light-theme .pillar p,html.light-theme .pillar-link {color:#586481}
+html.light-theme .overline {color:#345cc5}
+html.light-theme .pillar {background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(244,247,255,.9));border-color:rgba(74,91,151,.18);box-shadow:0 12px 32px rgba(31,45,90,.045)}
+html.light-theme .pillar h3 {color:#151a31}
+html.light-theme .download-area .button[aria-disabled="true"] {background:#e8edf7;color:#69738b}
+#world {filter:none!important}
+.download-area {width:min(100%,520px)}
+.download-fallback-link {color:var(--cyan);font-size:12px;text-decoration:underline;text-underline-offset:3px}
+html.light-theme .download-fallback-link {color:#3157bd}
+/* Glass glow localizado al cursor */
+.pillar,.feature-card,.feature-tile,.download-area {--mx:50%;--my:50%;position:relative;isolation:isolate}
+.pillar::before,.feature-card::before,.feature-tile::before,.download-area::before {content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;z-index:0;background:radial-gradient(220px circle at var(--mx) var(--my),rgba(32,231,246,.18),rgba(110,91,255,.09) 34%,transparent 72%);transition:opacity .22s ease}
+.pillar::after,.feature-card::after,.feature-tile::after,.download-area::after {content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(150px circle at var(--mx) var(--my),rgba(32,231,246,.9),rgba(133,82,255,.52) 35%,transparent 72%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;z-index:2;transition:opacity .22s ease}
+.pillar > *, .feature-card > *, .feature-tile > *, .download-area > * {position:relative;z-index:1}
+.pillar:hover::before,.pillar:hover::after,.feature-card:hover::before,.feature-card:hover::after,.feature-tile:hover::before,.feature-tile:hover::after,.download-area:hover::before,.download-area:hover::after {opacity:1}
+@media(prefers-reduced-motion:reduce){.pillar::before,.pillar::after,.feature-card::before,.feature-card::after,.feature-tile::before,.feature-tile::after{transition:none}}
+
+</style>
+</head>
+<body>
+<div class="background"></div>
+<canvas aria-hidden="true" id="world"></canvas>
+<header>
+<nav aria-label="Navegación principal" class="nav container">
+<a class="brand" href="#inicio">
+<img class="logo" src="icon.png" alt=""/>
+      Relay
+    </a>
+<div class="links">
+<a href="#funciones">Funciones</a>
+<a href="#voz-video">Voz y video</a>
+<a href="#comunidades">Comunidades</a>
+<a href="#filosofia">Nuestra idea</a>
+</div>
+<div class="nav-actions">
+<!-- Selector de Modo Claro / Oscuro sin filtros de inversión -->
+<button aria-label="Alternar modo claro y oscuro" class="theme-toggle-btn" id="themeToggleBtn" title="Cambiar tema" type="button">
+<svg fill="none" id="themeIconSun" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="display:none;" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="5"></circle>
+<line x1="12" x2="12" y1="1" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="23"></line>
+<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+<line x1="1" x2="3" y1="12" y2="12"></line>
+<line x1="21" x2="23" y1="12" y2="12"></line>
+<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+</svg>
+<svg fill="none" id="themeIconMoon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+</button>
+<a class="button" href="#comunidad">Conocé el proyecto ↗</a>
+</div>
+</nav>
+</header>
+<main>
+<section class="hero" id="inicio">
+<div class="container hero-grid">
+<div class="hero-copy">
+<div class="kicker">
+<span class="dot"></span>
+          Aplicación para Windows · En desarrollo activo
+        </div>
+<h1>
+          Tu gente.<br/>
+<span class="gradient">Tu espacio.</span>
+</h1>
+<p class="lead">
+          Un lugar para hablar, jugar y compartir con tus amigos y
+          comunidades. Sin pagar para desbloquear las funciones que importan.
+        </p>
+<div class="actions">
+<a class="button primary" href="#funciones">Explorá las funciones ↗</a>
+<a class="button" href="#filosofia">Por qué lo hacemos</a>
+</div>
+<div class="download-area">
+          <a class="button primary" id="download" href="#inicio" aria-disabled="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>
+            <span id="download-label">Buscando la última versión…</span>
+          </a>
+          <div class="meta">
+            <span class="status" id="status"><span class="dot"></span><span id="status-text">Conectando con el servidor…</span></span>
+            <span id="version"></span>
+          </div>
+          <p class="note" id="note">Para Windows 10 y 11 (64 bits). Se actualiza solo.</p>
+          <a class="download-fallback-link" id="fallback-link" href="https://github.com/relay-app/releases" target="_blank" rel="noopener noreferrer">
+            ¿Servidor fuera de línea? Descargar vía GitHub Releases ↗
+          </a>
+        </div>
+
+        <div class="note">
+          Un proyecto independiente que crece versión a versión.
+        </div>
+      </div>
+
+      <div class="hero-stage">
+<div class="halo"></div>
+<div class="mascot-card">
+<div class="lumi-greeting">
+<strong>¡Buenas! Soy Lumi ✨</strong>
+<button class="button" id="helloBtn" type="button">Saludá a Lumi ✨</button>
+</div>
+<span>La mascota de Relay. ¡Acompañame a conocer este lugar!</span>
+<div aria-live="polite" class="note" id="helloMessage">Psst… mové el cursor. Lumi te está mirando.</div>
+</div>
+</div>
+</div>
+<div class="scroll-hint">SEGUÍ EXPLORANDO ↓</div>
+</section>
+<!-- MOCKUP EXACTO RESTAURADO CON SVGs Y CONTENIDO COMPLETO -->
+<div class="container shot relay-preview">
+<svg aria-hidden="true" height="0" style="position:absolute" width="0">
+<defs>
+<symbol fill="none" id="i-mic" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="11" rx="3" width="6" x="9" y="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></symbol>
+<symbol fill="none" id="i-head" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"></path><rect height="6" rx="2" width="4" x="3" y="14"></rect><rect height="6" rx="2" width="4" x="17" y="14"></rect></symbol>
+<symbol fill="none" id="i-cam" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="10" rx="2" width="12" x="3" y="7"></rect><path d="M15 11l6-3v8l-6-3M3 3l18 18"></path></symbol>
+<symbol fill="none" id="i-screen" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="12" rx="2" width="18" x="3" y="4"></rect><path d="M8 20h8M12 16v4M12 13V7M9 10l3-3 3 3"></path></symbol>
+<symbol fill="none" id="i-gear" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></symbol>
+<symbol fill="none" id="i-hang" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M3 14.5c5-5 13-5 18 0l-2.5 2.5-3-1.5v-2.5a10 10 0 0 0-7 0v2.5l-3 1.5z"></path></symbol>
+<symbol fill="none" id="i-chat" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></symbol>
+<symbol fill="none" id="i-plus" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></symbol>
+<symbol fill="none" id="i-bell" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></symbol>
+<symbol fill="none" id="i-link" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"></path></symbol>
+<symbol fill="none" id="i-cal" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="5"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></symbol>
+<symbol fill="none" id="i-vol" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"></path></symbol>
+<symbol fill="none" id="i-search" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></symbol>
+<symbol fill="none" id="i-pin" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 17v5M9 3h6l-1 6 3 4H7l3-4z"></path></symbol>
+<symbol fill="none" id="i-clip" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 11l-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l9-9a3.7 3.7 0 0 1 5.2 5.2l-9 9a1.8 1.8 0 0 1-2.6-2.6L15.5 6"></path></symbol>
+<symbol fill="none" id="i-reply" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M4 20v-5a4 4 0 0 1 4-4h12"></path></symbol>
+</defs>
+</svg>
+<div aria-hidden="true" class="app">
+<div class="r-top">
+<span class="r-word">relay</span>
+<span class="r-callpill"><i class="r-livedot"></i><b>En llamada · Charla</b><span>· Los pibes</span><svg><use href="#i-mic"></use></svg><svg><use href="#i-hang"></use></svg></span>
+<svg><use href="#i-gear"></use></svg>
+<span class="av" style="width:30px;height:30px;font-size:11px;background:#e11d63">A</span>
+</div>
+<div class="r-strip">
+<div class="r-story"><span class="r-ring"><svg><use href="#i-chat"></use></svg></span><small>Chats</small></div>
+<div class="r-story"><span class="r-ring dashed"><svg><use href="#i-plus"></use></svg></span><small>Nuevo</small></div>
+<div class="r-story on"><span class="r-ring live"><span class="av" style="background:linear-gradient(135deg,#8b5cf6,#e11d63)">LP</span><span class="r-badge">EN LLAMADA</span></span><small>Los pibes</small></div>
+<div class="r-story extra"><span class="r-ring"><span class="av" style="background:#22c55e">5B</span></span><small>5to B</small></div>
+<div class="r-story extra"><span class="r-ring"><span class="av" style="background:#0ea5e9">MC</span></span><small>Minecraft</small></div>
+</div>
+<div class="r-body">
+<aside class="r-side">
+<div class="r-server"><span class="av" style="background:linear-gradient(135deg,#8b5cf6,#e11d63)">LP</span>Los pibes<svg><use href="#i-bell"></use></svg><svg><use href="#i-gear"></use></svg></div>
+<span class="r-chip"><svg><use href="#i-link"></use></svg>Invitar</span>
+<span class="r-chip"><svg><use href="#i-cal"></use></svg>Eventos <span style="color:var(--muted)">1</span></span>
+<div class="r-label"><span>Canales</span><span>+</span></div>
+<div class="r-chan"><span class="r-hash">#</span><b>general</b><span class="dot"></span></div>
+<div class="r-chan"><span class="r-hash">#</span>memes</div>
+<div class="r-chan on"><svg><use href="#i-vol"></use></svg><b>Charla</b><span class="n">4</span></div>
+<div class="r-chan"><svg><use href="#i-vol"></use></svg>Juegos</div>
+</aside>
+<div class="r-main">
+<div class="r-head">
+<svg style="color:var(--muted)"><use href="#i-vol"></use></svg>
+<div><b>Charla</b><small><i class="r-livedot"></i>En llamada · 12:34</small></div>
+<div class="tools"><svg><use href="#i-search"></use></svg><svg><use href="#i-pin"></use></svg><svg><use href="#i-chat"></use></svg></div>
+</div>
+<div class="r-tiles">
+<div class="r-tile"><span class="av" style="background:#e11d63">A</span><span>Vos</span></div>
+<div class="r-tile speaking"><span class="av" style="background:#8b5cf6">B</span><span>Beto</span></div>
+<div class="r-tile"><span class="av" style="background:#f59e0b">C</span><span>Caro</span></div>
+<div class="r-tile"><span class="av" style="background:#14b8a6">D</span><span>Dami</span></div>
+</div>
+<div class="r-controls">
+<i><svg><use href="#i-mic"></use></svg></i><i><svg><use href="#i-head"></use></svg></i><i><svg><use href="#i-cam"></use></svg></i><i><svg><use href="#i-screen"></use></svg></i><i><svg><use href="#i-gear"></use></svg></i>
+<em class="leave"><svg><use href="#i-hang"></use></svg>Salir</em>
+</div>
+<div class="r-msgs">
+<div class="r-who"><b>Beto</b>21:23</div>
+<div class="r-group">
+<span class="av" style="background:#8b5cf6">B</span>
+<div class="r-stack">
+<div class="r-bubble">¿Quién se suma a jugar a la noche?</div>
+<div class="r-poll">
+<b>📊 ¿A qué jugamos?</b>
+<div class="r-opt" style="--w:62%"><span>Minecraft</span><span>5</span></div>
+<div class="r-opt" style="--w:25%"><span>Among Us</span><span>2</span></div>
+<div class="r-opt" style="--w:13%"><span>Fortnite</span><span>1</span></div>
+</div>
+</div>
+</div>
+<div class="r-reply"><svg style="width:12px;height:12px"><use href="#i-reply"></use></svg><span class="av" style="background:#8b5cf6">B</span><b>Beto</b>¿Quién se suma a jugar a la noche?</div>
+<div class="r-bubble own">Yo! Entro en 5 😎</div>
+</div>
+<div class="r-composer"><svg><use href="#i-clip"></use></svg><span>Mensaje para la sala Charla</span><em>Enviar</em></div>
+</div>
+<aside class="r-call">
+<div class="r-call-top"><i class="r-livedot"></i>En llamada<small>12:34</small></div>
+<div class="r-call-sub"><span>Charla · 4 personas</span><em>Ver sala</em></div>
+<div class="r-mini">
+<div><span class="av" style="background:#e11d63">A</span>vos</div>
+<div class="speaking"><span class="av" style="background:#8b5cf6">B</span>Beto</div>
+<div><span class="av" style="background:#f59e0b">C</span>Caro</div>
+<div><span class="av" style="background:#14b8a6">D</span>Dami</div>
+</div>
+<div class="r-call-actions"><i><svg><use href="#i-mic"></use></svg></i><i><svg><use href="#i-head"></use></svg></i><em>Salir de la sala</em></div>
+<div class="r-role" style="--role:#3b82f6">OWNERS — 1</div>
+<div class="r-member"><span class="av" style="background:#e11d63">A</span><div><span class="r-fx">Ana</span><small>tomando café ☕</small></div></div>
+<div class="r-role" style="--role:#f59e0b">AMIGOS — 3</div>
+<div class="r-member"><span class="av" style="background:#8b5cf6">B</span><div>Beto<small>jugando Minecraft</small></div></div>
+<div class="r-member"><span class="av" style="background:#f59e0b">C</span><div>Caro</div></div>
+</aside>
+</div>
+</div>
+</div>
+<!-- SECCIÓN 00: OVERVIEW DE FUNCIONES -->
+<section class="section feature-overview" id="funciones">
+<div class="container">
+<div class="section-heading professional-heading">
+<div class="overline">Una plataforma para tu gente</div>
+<h2>Mucho más que <span class="gradient">un simple chat.</span></h2>
+<p>Relay reúne conversaciones, llamadas, comunidades y personalización en una misma aplicación. Estas son algunas de las herramientas que ya forman parte del proyecto.</p>
+</div>
+<div class="feature-pillars">
+<a class="pillar" href="#mensajes">
+<span class="pillar-number">01</span>
+<span class="pillar-icon">↗</span>
+<h3>Mensajes a tu manera</h3>
+<p>Chats privados, grupos, archivos, notas de voz y herramientas para encontrar lo importante.</p>
+<span class="pillar-link">Explorar mensajería <b>↗</b></span>
+</a>
+<a class="pillar" href="#voz-video">
+<span class="pillar-number">02</span>
+<span class="pillar-icon">◉</span>
+<h3>Voz, video y pantalla</h3>
+<p>Juntate, compartí lo que estás haciendo y ajustá la experiencia a tu conexión.</p>
+<span class="pillar-link">Explorar llamadas <b>↗</b></span>
+</a>
+<a class="pillar" href="#comunidades">
+<span class="pillar-number">03</span>
+<span class="pillar-icon">⌘</span>
+<h3>Comunidades propias</h3>
+<p>Canales, roles, permisos, eventos y herramientas de moderación para organizar a tu gente.</p>
+<span class="pillar-link">Explorar servidores <b>↗</b></span>
+</a>
+<a class="pillar" href="#perfil">
+<span class="pillar-number">04</span>
+<span class="pillar-icon">✳</span>
+<h3>Tu identidad</h3>
+<p>Perfiles, estados, notas, insignias, juegos y conexiones con otras plataformas.</p>
+<span class="pillar-link">Explorar perfiles <b>↗</b></span>
+</a>
+<a class="pillar" href="#personalizacion">
+<span class="pillar-number">05</span>
+<span class="pillar-icon">◈</span>
+<h3>A tu gusto</h3>
+<p>Temas, fondos, colores, tipografías y ajustes para adaptar Relay a tu forma de usarlo.</p>
+<span class="pillar-link">Explorar personalización <b>↗</b></span>
+</a>
+<a class="pillar" href="#seguridad">
+<span class="pillar-number">06</span>
+<span class="pillar-icon">⌑</span>
+<h3>Control y seguridad</h3>
+<p>Controles de cuenta, bloqueo, denuncias, auditoría y herramientas para cuidar tu espacio.</p>
+<span class="pillar-link">Explorar controles <b>↗</b></span>
+</a>
+</div>
+</div>
+</section>
+<!-- DETALLE 01: CONVERSACIONES -->
+<section class="detail-section" id="mensajes">
+<div class="container detail-grid">
+<div class="detail-intro">
+<div class="overline">01 / Conversaciones</div>
+<h2>Que la charla <span class="gradient">no se pierda.</span></h2>
+<p>Desde un mensaje rápido hasta una conversación larga: herramientas para expresarte y retomar el hilo.</p>
+</div>
+<div class="detail-panel">
+<div class="detail-item">
+<span>01</span>
+<div>
+<h3>Mensajes completos</h3>
+<p>Formato de texto, bloques de código, citas, listas, spoilers, reacciones, menciones, respuestas y edición de mensajes.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>02</span>
+<div>
+<h3>Compartí contenido</h3>
+<p>Fotos, videos, archivos, vista previa de enlaces, videos de YouTube dentro del chat y reenvío de mensajes.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>03</span>
+<div>
+<h3>Herramientas para conversar</h3>
+<p>Chats de grupo de hasta 10 personas, notas de voz que podés pausar y continuar, encuestas y mensajes temporales acordados por el chat.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>04</span>
+<div>
+<h3>Encontrá lo que buscás</h3>
+<p>Búsqueda por palabras, personas o mensajes con archivos, fotos y enlaces. Los mensajes no leídos se conservan incluso al volver a abrir Relay.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>05</span>
+<div>
+<h3>Más formas de participar</h3>
+<p>Notas de 24 horas, fondo personalizado por conversación, comandos como /dado, /moneda, /encuesta, /tts y /spoiler.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- DETALLE 02: VOZ Y VIDEO -->
+<section class="detail-section alt" id="voz-video">
+<div class="container detail-grid">
+<div class="detail-intro">
+<div class="overline">02 / Voz y video</div>
+<h2>Sentite cerca, <span class="gradient">aunque estén lejos.</span></h2>
+<p>Relay está pensado para estar en llamada mientras jugás, mirás algo o simplemente pasás el rato.</p>
+<div class="spec-note">
+<span class="spec-dot"></span>
+<span>Transmisiones de pantalla de hasta 1080p a 60 FPS, según el equipo y las condiciones de conexión.</span>
+</div>
+</div>
+<div class="detail-panel">
+<div class="detail-item">
+<span>01</span>
+<div>
+<h3>Llamadas y cámaras</h3>
+<p>Llamadas privadas, salas de voz, videollamadas, controles de micrófono y auriculares, prueba del micrófono y volumen individual de cada persona.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>02</span>
+<div>
+<h3>Compartir pantalla con audio</h3>
+<p>Compartí una ventana o la pantalla con el sonido del equipo. Cada persona puede elegir la calidad de transmisión que mira.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>03</span>
+<div>
+<h3>Tu voz, tus reglas</h3>
+<p>Supresión de ruido con IA, voz más clara, pulsar para hablar, atajos para silenciarte o ensordecerte y distintos efectos de voz, incluido autotune.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>04</span>
+<div>
+<h3>Sonidos para compartir</h3>
+<p>Panel de sonidos en las llamadas, paquetes de timbres y sonidos de entrada personalizados. Podés recortar los sonidos antes de usarlos.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>05</span>
+<div>
+<h3>Diseñado para conexiones reales</h3>
+<p>Si la conexión se interrumpe brevemente, Relay espera hasta 30 segundos para intentar mantenerte en la llamada. Las transmisiones sin espectadores reducen su actividad.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- DETALLE 03: SERVIDORES Y COMUNIDADES -->
+<section class="detail-section" id="comunidades">
+<div class="container detail-grid">
+<div class="detail-intro">
+<div class="overline">03 / Servidores y comunidades</div>
+<h2>Tu espacio, <span class="gradient">tus reglas.</span></h2>
+<p>Creá un lugar para tu grupo, tu curso, tus partidas o cualquier interés que compartan.</p>
+</div>
+<div class="detail-panel">
+<div class="detail-item">
+<span>01</span>
+<div>
+<h3>Canales organizados</h3>
+<p>Canales de texto y voz, categorías que podés ordenar, canales privados por rol y canales de anuncios para publicaciones de moderadores.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>02</span>
+<div>
+<h3>Roles y permisos</h3>
+<p>Creá roles de administración y moderación, asigná permisos, organizá su jerarquía y controlá quién puede mencionar a todos o a cada rol.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>03</span>
+<div>
+<h3>Moderación integrada</h3>
+<p>Expulsar, banear, quitar bans, silenciar o desconectar de una llamada. También podés fijar mensajes, configurar modo lento y revisar el registro de auditoría.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>04</span>
+<div>
+<h3>Invitaciones y eventos</h3>
+<p>Invitaciones personalizadas y limitadas por tiempo o usos, mensajes de bienvenida y despedida, eventos con aviso de inicio y tarjetas para invitar a tus amigos.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>05</span>
+<div>
+<h3>Emojis, stickers y pizarrón</h3>
+<p>Subí emojis, stickers y sonidos para tu servidor. Usalos también en otros espacios y privados; en el pizarrón pueden acomodar stickers y notas entre todos.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- DETALLE 04: IDENTIDAD Y ACTIVIDAD -->
+<section class="detail-section alt" id="perfil">
+<div class="container detail-grid">
+<div class="detail-intro">
+<div class="overline">04 / Identidad y actividad</div>
+<h2>Que tu perfil <span class="gradient">hable de vos.</span></h2>
+<p>No sos solo un nombre en una lista. Mostrá lo que querés compartir y decidí cuándo hacerlo.</p>
+</div>
+<div class="detail-panel">
+<div class="detail-item">
+<span>01</span>
+<div>
+<h3>Perfiles personalizables</h3>
+<p>Foto, banner, descripción, color, tipografía y efectos para el nombre. Insignias para reconocer distintas formas de participar en el proyecto.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>02</span>
+<div>
+<h3>Estados y notas</h3>
+<p>En línea, ausente, no molestar o invisible; estado personalizado y notas que duran 24 horas.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>03</span>
+<div>
+<h3>Amigos y conexiones</h3>
+<p>Amigos, mensajes directos, bloqueo y silencio. Conectá servicios como Steam, Spotify, Instagram, TikTok y Riot para mostrarlos en tu perfil.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>04</span>
+<div>
+<h3>Juegos y actividad</h3>
+<p>Mostrá qué juego estás usando, tu colección de juegos y tu favorito. Al conectar Steam mediante inicio de sesión, podés mostrar las horas de juego; la actividad se puede desactivar.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>05</span>
+<div>
+<h3>Detalles de cada comunidad</h3>
+<p>Apodos distintos según el servidor y datos como la fecha de llegada, además de amigos y servidores que tienen en común.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- DETALLE 05: PERSONALIZACIÓN Y RENDIMIENTO -->
+<section class="detail-section" id="personalizacion">
+<div class="container detail-grid">
+<div class="detail-intro">
+<div class="overline">05 / Personalización y rendimiento</div>
+<h2>Hacelo sentir <span class="gradient">tuyo.</span></h2>
+<p>Una interfaz que podés adaptar a tu gusto, con opciones para que no consuma recursos al pedo.</p>
+</div>
+<div class="detail-panel">
+<div class="detail-item">
+<span>01</span>
+<div>
+<h3>Una apariencia propia</h3>
+<p>Diseño Órbita, seis temas con colores a elección, intensidad del color de fondo, imágenes, GIFs o videos como fondo y colores de acento extraídos de tu imagen.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>02</span>
+<div>
+<h3>Ajustes para tu forma de usarlo</h3>
+<p>Modo compacto, tamaño de la interfaz, tamaño del texto, formato de hora, tecla para enviar, controles de spoilers, GIFs y animaciones.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>03</span>
+<div>
+<h3>Menos recursos en segundo plano</h3>
+<p>Al minimizar Relay, se reducen el uso de procesador y placa de video; las animaciones y los fondos en video se pausan cuando la app queda detrás.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>04</span>
+<div>
+<h3>Transmisiones optimizadas</h3>
+<p>Codificación H.264 mediante la placa de video cuando está disponible, controles de aceleración por hardware y ajustes de calidad para adaptarse a la conexión.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>05</span>
+<div>
+<h3>Actualizaciones cuidadas</h3>
+<p>Actualización automática con aviso y progreso, opción para posponerla y sin iniciar una actualización en medio de una llamada.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- DETALLE 06: CUENTA Y SEGURIDAD -->
+<section class="detail-section alt" id="seguridad">
+<div class="container detail-grid">
+<div class="detail-intro">
+<div class="overline">06 / Cuenta y seguridad</div>
+<h2>Más control sobre <span class="gradient">tu espacio.</span></h2>
+<p>Herramientas para gestionar tu cuenta, moderar comunidades y tener más claridad sobre lo que pasa.</p>
+</div>
+<div class="detail-panel">
+<div class="detail-item">
+<span>01</span>
+<div>
+<h3>Tu cuenta bajo control</h3>
+<p>Cuenta vinculada a un correo, recuperación de contraseña por código, cambio de correo, contraseña y nombre de usuario, cierre de sesión en otras PCs y opción para borrar la cuenta.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>02</span>
+<div>
+<h3>Denuncias y moderación</h3>
+<p>Denunciá mensajes o perfiles. Los reportes llegan a los moderadores del servidor y el registro de auditoría ayuda a revisar acciones administrativas.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>03</span>
+<div>
+<h3>Privacidad cotidiana</h3>
+<p>Bloqueá personas, silenciá conversaciones, elegí cuándo mostrar tu actividad y usá el estado invisible para no mostrarte en línea.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>04</span>
+<div>
+<h3>Copias de seguridad</h3>
+<p>El proyecto cuenta con copias de seguridad automáticas diarias de Relay.</p>
+</div>
+</div>
+<div class="detail-item">
+<span>05</span>
+<div>
+<h3>Reglas claras</h3>
+<p>Relay establece una edad mínima de 13 años y presenta sus reglas durante la creación de la cuenta.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- MANIFIESTO -->
+<section class="manifesto" id="filosofia">
+<div class="container">
+<div class="manifesto-panel">
+<div class="manifesto-content">
+<div class="overline">Nuestra idea</div>
+<blockquote>
+            La comunicación no debería tener un
+            <span class="gradient">precio.</span>
+</blockquote>
+<p>
+            Relay nace con una idea simple: las herramientas para hablar, jugar y crear comunidad no deberían dividir a las personas entre quienes pueden pagar y quienes no.
+            Por eso, las funciones esenciales de Relay no dependen de una suscripción.
+          </p>
+<a class="button primary" href="#comunidad">
+            Acompañá el proyecto ↗
+          </a>
+</div>
+</div>
+</div>
+</section>
+<!-- COMUNIDAD -->
+<section class="section" id="comunidad">
+<div class="container">
+<div class="section-heading">
+<div class="overline">Desde el principio</div>
+<h2>Esto recién <span class="gradient">empieza.</span></h2>
+<p>
+          Relay sigue creciendo y mejorando versión a versión. Seguí el proyecto, compartí tus ideas y ayudanos a decidir qué construir después. Algunas funciones pueden evolucionar a medida que avanza el desarrollo.
+        </p>
+<div class="actions">
+<a class="button primary" href="https://www.instagram.com/relay_.arg/" rel="noopener noreferrer" target="_blank">
+            Seguir en Instagram ↗
+          </a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer>
+<div class="container footer-inner">
+<a class="brand" href="#inicio">
+<img class="logo" src="icon.png" alt=""/>
+      Relay
+    </a>
+<span class="footer-tag">Tu gente. Tu espacio.</span>
+<span>© Relay · Un proyecto en construcción<br/><span id="footer-version"></span></span>
+</div>
+</footer>
+<!-- SCRIPT THREE.JS: LUMI CON AUDIO CHIRP, VUELO Y SIN DISTORSIÓN -->
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js';
+
+const canvas = document.querySelector('#world');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  alpha: true,
+  antialias: true,
+  powerPreference: 'high-performance'
+});
+
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 10);
+
+scene.add(new THREE.AmbientLight(0x8a9bff, 1.2));
+
+const cyanLight = new THREE.PointLight(0x16e8ff, 38, 18);
+cyanLight.position.set(-3, 2, 4);
+scene.add(cyanLight);
+
+const violetLight = new THREE.PointLight(0xa334ff, 44, 18);
+violetLight.position.set(3, 1, 3);
+scene.add(violetLight);
+
+const blueLight = new THREE.PointLight(0x315dff, 25, 15);
+blueLight.position.set(0, -3, 1);
+scene.add(blueLight);
+
+/* Lumi: cuerpo oscuro y ojos brillantes */
+const lumi = new THREE.Group();
+scene.add(lumi);
+
+const faceMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0x07091b,
+  metalness: 0.25,
+  roughness: 0.2,
+  clearcoat: 1,
+  clearcoatRoughness: 0.13
+});
+
+const face = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), faceMaterial);
+face.scale.set(1.10, 0.87, 0.48);
+face.rotation.z = 0.08;
+lumi.add(face);
+
+function createEye(x, color) {
+  const group = new THREE.Group();
+  const material = new THREE.MeshPhysicalMaterial({
+    color,
+    emissive: color,
+    emissiveIntensity: 0.7,
+    roughness: 0.16,
+    metalness: 0.08,
+    clearcoat: 1
+  });
+  const eye = new THREE.Mesh(new THREE.CapsuleGeometry(0.175, 0.27, 10, 28), material);
+  eye.scale.set(1, 1, 0.64);
+  eye.rotation.z = 0.08;
+  group.add(eye);
+  const glow = new THREE.PointLight(color, 1.2, 1.8);
+  glow.position.z = 0.25;
+  group.add(glow);
+  group.position.set(x, 0.02, 0.49);
+  lumi.add(group);
+  return group;
+}
+
+const leftEye = createEye(-0.38, 0x21eaff);
+const rightEye = createEye(0.38, 0x9d60ff);
+
+function createRibbon(angle, tilt, radiusX, radiusY, phase) {
+  const vertices=[], colors=[], indices=[];
+  const segments=192, sides=16;
+  const cyan=new THREE.Color('#24e5ff');
+  const blue=new THREE.Color('#3475ff');
+  const pink=new THREE.Color('#d83fff');
+  for(let i=0;i<=segments;i++) {
+    const t=i/segments*Math.PI*2;
+    const width=.255+.065*Math.sin(t*2+phase);
+    for(let j=0;j<=sides;j++) {
+      const q=j/sides*Math.PI*2;
+      const radial=width*Math.cos(q);
+      vertices.push((radiusX+radial)*Math.cos(t),
+                    (radiusY+radial)*Math.sin(t),
+                    .065*Math.sin(q)+.10*Math.sin(t*2+phase));
+      const mix=(Math.cos(t)+1)/2;
+      const c=mix<.5?cyan.clone().lerp(blue,mix*2):blue.clone().lerp(pink,(mix-.5)*2);
+      c.lerp(new THREE.Color('#c9ffff'), Math.pow(Math.abs(Math.sin(q)),8)*.28);
+      colors.push(c.r,c.g,c.b);
+    }
+  }
+  for(let i=0;i<segments;i++) for(let j=0;j<sides;j++) {
+    const a=i*(sides+1)+j,b=a+sides+1;
+    indices.push(a,b,a+1,b,b+1,a+1);
+  }
+  const geometry=new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+  geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  const material=new THREE.MeshPhysicalMaterial({
+    vertexColors:true, metalness:.08, roughness:.19,
+    transparent:true, opacity:.69, transmission:.12,
+    thickness:.13, ior:1.35, clearcoat:1, clearcoatRoughness:.12,
+    side:THREE.DoubleSide, depthWrite:false,
+    emissive:0x163d93, emissiveIntensity:.16
+  });
+  const ribbon=new THREE.Mesh(geometry,material);
+  ribbon.rotation.set(tilt, .12*Math.sin(phase), angle);
+  ribbon.userData.baseRotation=ribbon.rotation.clone();
+  lumi.add(ribbon);
+  return ribbon;
+}
+const rings=[
+  createRibbon(-.28,.40,1.45,1.06,0),
+  createRibbon(1.02,-.43,1.46,1.03,1.8),
+  createRibbon(-1.03,.32,1.43,1.04,3.5)
+];
+
+/* Partículas */
+const count = 240;
+const positions = new Float32Array(count * 3);
+const colors = new Float32Array(count * 3);
+for (let i = 0; i < count; i++) {
+  const radius = 2.2 + Math.random() * 5.5;
+  const angle = Math.random() * Math.PI * 2;
+  positions[i * 3] = Math.cos(angle) * radius;
+  positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
+  positions[i * 3 + 2] = (Math.random() - 0.5) * 4 - 1;
+  const mix = Math.random();
+  colors[i * 3] = 0.08 + mix * 0.36;
+  colors[i * 3 + 1] = 0.48 - mix * 0.18;
+  colors[i * 3 + 2] = 0.95;
+}
+const particleGeometry = new THREE.BufferGeometry();
+particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+const particles = new THREE.Points(particleGeometry, new THREE.PointsMaterial({
+  size: 0.018, vertexColors: true, transparent: true, opacity: 0.5, depthWrite: false
+}));
+scene.add(particles);
+
+let pointerX = 0, pointerY = 0, smoothX = 0, smoothY = 0;
+let helloUntil = 0, blinking = false, nextBlink = performance.now() + 2500;
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+window.addEventListener('pointermove', event => {
+  pointerX = (event.clientX / window.innerWidth - 0.5) * 2;
+  pointerY = (event.clientY / window.innerHeight - 0.5) * 2;
+}, { passive: true });
+
+window.addEventListener('resize', () => {
+  const width = window.innerWidth, height = window.innerHeight;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, width < 600 ? 1.2 : 1.5));
+  renderer.setSize(width, height);
+  camera.aspect = width / height;
+  camera.fov = width < 600 ? 45 : 36;
+  camera.updateProjectionMatrix();
+});
+
+let audioContext;
+let flightStarted = -Infinity, flightOrigin = {x:0, y:0};
+const flightDuration = 6200;
+
+async function chirp() {
+  try {
+    const Audio = window.AudioContext || window.webkitAudioContext;
+    if(!Audio) return;
+    audioContext ||= new Audio();
+    if(audioContext.state === 'suspended') await audioContext.resume();
+    const start = audioContext.currentTime;
+    [1100, 1500, 1900].forEach((frequency, i) => {
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const at = start + i * .14;
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(frequency, at);
+      oscillator.frequency.exponentialRampToValueAtTime(frequency * 1.25, at + .10);
+      gain.gain.setValueAtTime(.0001, at);
+      gain.gain.exponentialRampToValueAtTime(.055, at + .018);
+      gain.gain.exponentialRampToValueAtTime(.0001, at + .13);
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
+      oscillator.start(at);
+      oscillator.stop(at + .14);
+    });
+  } catch (err) {
+    // Si el navegador bloquea audio, el efecto visual continúa
+  }
+}
+
+document.querySelector('#helloBtn').addEventListener('click', () => {
+  flightOrigin = { x: lumi.position.x, y: lumi.position.y };
+  flightStarted = performance.now();
+  helloUntil = flightStarted + flightDuration;
+  document.querySelector('#helloMessage').textContent = '¡Holaaa! ✨ ¡Mirá cómo vuelo!';
+  chirp();
+});
+
+const clock = new THREE.Clock();
+const motionFactor = reducedMotion ? 0 : 1;
+
+function animate(now) {
+  requestAnimationFrame(animate);
+
+  const time = clock.getElapsedTime();
+  smoothX += (pointerX - smoothX) * 0.035;
+  smoothY += (pointerY - smoothY) * 0.035;
+
+  const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  const progress = clamp(window.scrollY / maxScroll, 0, 1);
+  const mobile = window.innerWidth < 820;
+
+  const stage = document.querySelector('.hero-stage')?.getBoundingClientRect() || { left: 0, top: 0, width: 300, height: 300 };
+  const visibleHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
+  const visibleWidth = visibleHeight * camera.aspect;
+  const heroX = ((stage.left + stage.width / 2) / innerWidth - .5) * visibleWidth;
+  const heroY = (.5 - (stage.top + stage.height / 2 + window.scrollY) / innerHeight) * visibleHeight;
+
+  let targetX = THREE.MathUtils.lerp(heroX, mobile ? 0.15 : 2.0, progress);
+  let targetY = THREE.MathUtils.lerp(heroY, mobile ? -0.4 : -0.35, progress) + Math.sin(time * 0.8) * 0.1 * motionFactor;
+
+  const stageScale = Math.min(stage.width, stage.height) * .83 / innerHeight * visibleHeight / 3.5;
+  let targetScale = THREE.MathUtils.lerp(stageScale, mobile ? .55 : .85, progress);
+  const flightProgress = clamp((now - flightStarted) / flightDuration, 0, 1);
+  const flying = now < helloUntil;
+
+  canvas.classList.toggle('lumi-flying', flying);
+
+  if (flying) {
+    const flyingScale = Math.min(targetScale, .50);
+    const rx = Math.max(0, visibleWidth / 2 - flyingScale * 1.85);
+    const ry = Math.max(0, visibleHeight / 2 - flyingScale * 1.85 - .45);
+    const points = [flightOrigin, {x:-rx*.75, y:ry*.60}, {x:rx*.75, y:ry*.45}, {x:rx*.65, y:-ry*.65}, {x:-rx*.65, y:-ry*.45}, {x:targetX, y:targetY}];
+    const segment = Math.min(4, Math.floor(flightProgress * 5));
+    const u = flightProgress * 5 - segment;
+    const ease = u * u * (3 - 2 * u);
+    lumi.position.x = THREE.MathUtils.lerp(points[segment].x, points[segment+1].x, ease);
+    lumi.position.y = THREE.MathUtils.lerp(points[segment].y, points[segment+1].y, ease);
+    const blend = Math.sin(Math.PI * flightProgress) ** 2;
+    targetScale = THREE.MathUtils.lerp(targetScale, flyingScale, blend);
+  } else {
+    lumi.position.x += (targetX + smoothX * .23 - lumi.position.x) * .035;
+    lumi.position.y += (targetY - smoothY * .13 - lumi.position.y) * .035;
+  }
+
+  const pulse = 1 + Math.sin(time * 2.1) * 0.018 * motionFactor;
+  lumi.scale.setScalar(targetScale * pulse);
+
+  lumi.rotation.y = Math.sin(time * 0.45) * 0.18 * motionFactor + smoothX * 0.22;
+  lumi.rotation.x = Math.sin(time * 0.7) * 0.08 * motionFactor - smoothY * 0.13;
+  lumi.rotation.z = Math.sin(time * 0.38) * 0.035 * motionFactor;
+
+  rings.forEach((ring, i) => {
+    const base = ring.userData.baseRotation;
+    ring.rotation.x = base.x + Math.sin(time * .45 + i) * .035 * motionFactor;
+    ring.rotation.y = base.y + Math.sin(time * .35 + i) * .04 * motionFactor;
+    ring.rotation.z = base.z + Math.sin(time * .25 + i) * .025 * motionFactor;
+  });
+  particles.rotation.y = Math.sin(time * 0.07) * 0.035 * motionFactor;
+
+  if (now > nextBlink && !blinking) {
+    blinking = true;
+    nextBlink = now + 180;
+  }
+
+  let eyeScaleY = 1;
+  if (blinking) {
+    const elapsed = now - (nextBlink - 180);
+    eyeScaleY = elapsed < 90 ? Math.max(0.08, 1 - elapsed / 90) : Math.min(1, (elapsed - 90) / 90);
+    if (elapsed >= 180) {
+      blinking = false;
+      eyeScaleY = 1;
+      nextBlink = now + 2200 + Math.random() * 2800;
+    }
+  }
+  leftEye.scale.y = eyeScaleY;
+  rightEye.scale.y = eyeScaleY;
+
+  if (now < helloUntil) {
+    lumi.rotation.z += Math.sin(now * 0.009) * 0.18;
+    lumi.rotation.y += Math.sin(flightProgress * Math.PI * 2) * 0.65;
+  }
+
+  camera.position.x += (smoothX * 0.12 - camera.position.x) * 0.018;
+  camera.position.y += (-smoothY * 0.08 - camera.position.y) * 0.018;
+  camera.lookAt(0, 0, 0);
+
+  renderer.render(scene, camera);
+}
+
+camera.fov = window.innerWidth < 600 ? 45 : 36;
+camera.updateProjectionMatrix();
+
+requestAnimationFrame(animate);
+</script>
+<!-- SCRIPT 2: MODO CLARO / OSCURO (CONMUTACIÓN DE CLASE light-theme) Y SERVIDOR -->
+<script>
+  // Control de Tema Claro / Oscuro sin filtros de inversión
+  const htmlEl = document.documentElement;
+  const themeBtn = document.getElementById('themeToggleBtn');
+  const iconSun = document.getElementById('themeIconSun');
+  const iconMoon = document.getElementById('themeIconMoon');
+
+  function applyTheme(isLight) {
+    if (isLight) {
+      htmlEl.classList.add('light-theme');
+      iconSun.style.display = 'none';
+      iconMoon.style.display = 'block';
+      localStorage.setItem('relay_theme', 'light');
+    } else {
+      htmlEl.classList.remove('light-theme');
+      iconSun.style.display = 'block';
+      iconMoon.style.display = 'none';
+      localStorage.setItem('relay_theme', 'dark');
+    }
+  }
+
+  const savedTheme = localStorage.getItem('relay_theme') || 'dark';
+  applyTheme(savedTheme === 'light');
+
+  themeBtn.addEventListener('click', () => {
+    const isCurrentlyLight = htmlEl.classList.contains('light-theme');
+    applyTheme(!isCurrentlyLight);
+  });
+
+  // Conexión y descarga de servidor original
+  const SERVER = 'https://kernelos-pc.tail5c96f7.ts.net';
+  const $ = (id) => document.getElementById(id);
+  const isWindows = /Windows/i.test(navigator.userAgent);
+
+  function formatSize(bytes) {
+    return bytes ? `${Math.round(bytes / 1024 / 1024)} MB` : '';
+  }
+
+  function parseLatest(text) {
+    const field = (name) => text.match(new RegExp(`^${name}:\\s*['"]?(.+?)['"]?\\s*$`, 'm'))?.[1];
+    const url = text.match(/^\s+- url:\s*(\S+)/m)?.[1];
+    return { version: field('version'), path: field('path'), url, size: Number(text.match(/^\s+size:\s*(\d+)/m)?.[1]) || 0 };
+  }
+
+  async function load() {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
+    try {
+      const res = await fetch(`${SERVER}/updates/latest.yml?t=${Date.now()}`, { signal: controller.signal, cache: 'no-store' });
+      if (!res.ok) throw new Error(res.status);
+      const latest = parseLatest(await res.text());
+      if (!latest.version || !latest.path) throw new Error('latest.yml incompleto');
+
+      const btn = $('download');
+      btn.href = /^https:\/\/github\.com\//.test(latest.url ?? '') ? latest.url : `${SERVER}/updates/${encodeURIComponent(latest.path)}`;
+      btn.removeAttribute('aria-disabled');
+      $('download-label').textContent = 'Descargar para Windows';
+      $('status').className = 'status on';
+      $('status-text').textContent = 'Servidor encendido';
+      $('version').textContent = `Versión ${latest.version}${latest.size ? ` · ${formatSize(latest.size)}` : ''}`;
+      $('footer-version').textContent = `Última versión: ${latest.version}`;
+    } catch {
+      $('download-label').textContent = 'Servidor apagado';
+      $('status').className = 'status off';
+      $('status-text').textContent = 'El servidor está apagado ahora';
+      if (isWindows) $('note').textContent = 'Probá de nuevo en un rato: cuando vuelva, el botón aparece solo.';
+      setTimeout(load, 30000);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  if (!isWindows) {
+    const note = $('note');
+    note.classList.add('warn');
+    note.textContent = 'Relay es para Windows 10 y 11. Abrí esta página desde la compu para instalarlo.';
+  }
+
+  load();
+
+document.querySelectorAll('.pillar,.feature-card,.feature-tile,.download-area').forEach(card=>{
+ card.addEventListener('pointermove',event=>{const r=card.getBoundingClientRect();card.style.setProperty('--mx',`${event.clientX-r.left}px`);card.style.setProperty('--my',`${event.clientY-r.top}px`)},{passive:true});
+ card.addEventListener('pointerleave',()=>{card.style.setProperty('--mx','50%');card.style.setProperty('--my','50%')},{passive:true});
+});
+</script>
+</body></html>
